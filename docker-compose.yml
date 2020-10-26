@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+
+  cvk:
+    image: cvk:0.0.1
+    build:
+      context: cvk
+      dockerfile: Dockerfile
+    environment:
+      PORT: 6745
+    ports:
+      - "6745:6745"
+    volumes:
+      - ./blog:/home/blog
+    working_dir: /home/blog
+    command: gunicorn -b :5346 -k uvicorn.workers.UvicornWorker blog.main:app

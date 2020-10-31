@@ -12,6 +12,6 @@ services:
     ports:
       - "6745:6745"
     volumes:
-      - ./blog:/home/blog
-    working_dir: /home/blog
-    command: gunicorn -b :5346 -k uvicorn.workers.UvicornWorker blog.main:app
+      - ./cvk:/home/cvk
+    working_dir: /home/cvk
+    command: uvicorn --host 0.0.0.0 --port 6745 --reload cvk.main:app

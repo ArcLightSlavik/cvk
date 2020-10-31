@@ -1,5 +1,7 @@
 # session.py
 
+from typing import AsyncGenerator
+
 import time
 
 from selenium import webdriver
@@ -8,13 +10,13 @@ from pyvirtualdisplay import Display
 
 
 @asynccontextmanager
-async def session():
+async def session() -> AsyncGenerator[webdriver.Chrome, None]:
     driver = await clean_chrome()
     yield driver
     await kill_selenium(driver)
 
 
-async def clean_chrome():
+async def clean_chrome() -> webdriver.Chrome:
     display = Display(visible=0)
     display.start()
     options = webdriver.ChromeOptions()
@@ -25,7 +27,7 @@ async def clean_chrome():
     return driver
 
 
-async def kill_selenium(driver):
+async def kill_selenium(driver: webdriver.Chrome) -> None:
     # required to correctly send requests to another server
     time.sleep(0.5)
     driver.close()

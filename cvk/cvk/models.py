@@ -1,4 +1,7 @@
-import typing
+from typing import Any
+from typing import List
+from typing import Union
+
 import pydantic
 
 
@@ -11,19 +14,19 @@ class PollingStation(pydantic.BaseModel):
     name: str
     description: str
     address: str
-    streets: typing.List[typing.Any]
+    streets: Union[List[Any], None]
 
 
 class City(pydantic.BaseModel):
     identifier: int
     name: str
-    polling_stations: typing.List[PollingStation]
+    polling_stations: Union[List[PollingStation], None]
 
 
 class County(pydantic.BaseModel):
     identifier: int
     name: str
-    streets: typing.Any
+    streets: Any
 
 
 class Candidate(pydantic.BaseModel):
@@ -31,6 +34,6 @@ class Candidate(pydantic.BaseModel):
     full_name: str
     birthday_and_place_of_birth: str
     info: str
-    county: typing.Union[str, int]
-    number_in_county: typing.Union[int, str]
+    county: Union[int, str]
+    number_in_county: Union[int, str]
     party: str

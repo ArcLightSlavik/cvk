@@ -5,14 +5,8 @@ from typing import Union
 import pydantic
 
 
-class PostRequest(pydantic.BaseModel):
-    url: str
-
-
 class PollingStation(pydantic.BaseModel):
     identifier: int
-    name: str
-    description: str
     address: str
     streets: Union[List[Any], None]
 

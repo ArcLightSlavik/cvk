@@ -1,22 +1,16 @@
 from typing import List
 from typing import NamedTuple
 
-import re
-
-from .models import City
-from .models import County
-from .models import Candidate
-from .models import PollingStation
+from cvk.cvk.models import City
+from cvk.cvk.models import PollingStation
 
 
-def order_data_into_classes(data_tuple_list: List[NamedTuple]) -> List[City]:
+def parse_city(city: List[NamedTuple]) -> List[City]:
     cities = []
 
-    for data_columns in data_tuple_list:
+    for data_columns in city:
         polling_station = PollingStation(
             identifier=data_columns[0],
-            name='',
-            description='',
             address=data_columns[2],
             streets=None
         )
@@ -60,54 +54,3 @@ def order_data_into_classes(data_tuple_list: List[NamedTuple]) -> List[City]:
                 polling_city.name = data_columns[1]
                 cities.append(polling_city)
     return cities
-
-
-def county_data_split(county_tuple_list: List[NamedTuple]) -> List[County]:
-    counties = []
-    for index, item in enumerate(county_tuple_list):
-        if index is 0:
-            continue
-
-        a_county = County(
-            identifier=int(item[0]),
-            name=item[1],
-            streets=item[3]
-        )
-        counties.append(a_county)
-
-    return counties
-
-
-def candidates_data_split(candidates_tuple: List[NamedTuple]) -> List[Candidate]:
-    candidates_list = []
-    party = None
-    for index, item in enumerate(candidates_tuple):
-        # skip initial table
-        if index is 0:
-            continue
-        # get the party
-        if item[1] == item[2]:
-            party = item[1]
-            continue
-
-        # country number can be either int or 'First Candidate'
-        try:
-            number_in_country = int(item[5])
-        except ValueError :
-            number_in_country = item[5]
-
-        # Weird spacing issue fix
-        full_name = re.sub(r"(\w)([А-ЯҐЄІЇ])", r"\1 \2", item[1])
-
-        a_candidate = Candidate(
-            party_identifier=int(item[0]),
-            full_name=full_name,
-            birthday_and_place_of_birth=item[2],
-            info=item[3],
-            county=item[4],
-            number_in_county=number_in_country,
-            party=party
-        )
-        candidates_list.append(a_candidate)
-
-    return candidates_list
